@@ -11,5 +11,11 @@ namespace Cegeka.Guild.Pokeverse.DAL.Entities
         public Pokemon Defender { get; set; }
 
         public Guid DefenderId { get; set; }
+
+        public Guid ActivePlayerId { get; set; }
+
+        public Pokemon Winner { get; set; }
+
+        public Pokemon Loser { get; set; }
     }
 }

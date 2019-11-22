@@ -30,6 +30,52 @@ namespace Cegeka.Guild.Pokeverse.BLL.Implementations
             battleRepository.Add(battle);
         }
 
+        public void UseAbility(Guid battleId, Guid participantId, Guid abilityId)
+        {
+            var battle = this.battleRepository.GetById(battleId);
+            if (battle == null)
+            {
+                throw new InvalidOperationException("The battle does not exist!");
+            }
+
+            if (battle.Winner != null)
+            {
+                throw new InvalidOperationException("The battle has already ended!");
+            }
+
+            if (participantId != battle.ActivePlayerId)
+            {
+                throw new InvalidOperationException("It is not your turn yet!");
+            }
+
+            var pokemonToDealDamage = this.pokemonsRepository.GetById(participantId);
+            var ability = pokemonToDealDamage.Definition.Abilities.FirstOrDefault(a => a.Id == abilityId);
+            if (ability == null)
+            {
+                throw new InvalidOperationException("You cannot use an undefined ability");
+            }
+
+            if (ability.RequiredLevel > pokemonToDealDamage.Level)
+            {
+                throw new InvalidOperationException("You haven't learned this ability yet!'");
+            }
+
+            var pokemonToTakeDamage = battle.Defender;
+            if (participantId != battle.AttackerId)
+            {
+                pokemonToTakeDamage = battle.Attacker;
+            }
+
+            pokemonToTakeDamage.Health -= ability.Damage;
+            battle.ActivePlayerId = pokemonToTakeDamage.Id;
+
+            if (pokemonToTakeDamage.Health <= 0)
+            {
+                battle.Winner = pokemonToDealDamage;
+                battle.Loser = pokemonToTakeDamage;
+            }
+        }
+
         private void Validate(Guid attackerId, Guid defenderId)
         {
             if (attackerId == defenderId)
