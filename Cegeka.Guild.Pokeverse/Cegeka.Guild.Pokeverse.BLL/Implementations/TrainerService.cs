@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cegeka.Guild.Pokeverse.BLL.Abstracts;
+using Cegeka.Guild.Pokeverse.BLL.Models;
 using Cegeka.Guild.Pokeverse.DAL.Abstracts;
 using Cegeka.Guild.Pokeverse.DAL.Entities;
 
@@ -37,6 +39,14 @@ namespace Cegeka.Guild.Pokeverse.BLL.Implementations
                 Pokemons = randomDefinitions.Select(d => new Pokemon(d)).ToList()
             };
             this.trainerRepository.Add(trainer);
+        }
+
+        public IReadOnlyCollection<TrainerModel> GetAll()
+        {
+            return trainerRepository
+                .GetAll()
+                .Select(TrainerModel.From)
+                .ToList();
         }
     }
 }
