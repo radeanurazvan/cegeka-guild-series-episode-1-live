@@ -1,4 +1,3 @@
-using Cegeka.Guild.Pokeverse.DAL;
 using Cegeka.Guild.Pokeverse.DAL.Abstracts;
 using Cegeka.Guild.Pokeverse.DAL.Implementations;
 using Microsoft.AspNetCore.Builder;
@@ -24,9 +23,8 @@ namespace Cegeka.Guild.Pokeverse.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddDAL()
-                .AddControllers();
+            services.AddControllers();
+            services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
