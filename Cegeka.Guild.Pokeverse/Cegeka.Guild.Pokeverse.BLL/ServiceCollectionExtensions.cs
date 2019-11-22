@@ -8,7 +8,8 @@ namespace Cegeka.Guild.Pokeverse.BLL
     {
         public static IServiceCollection AddBLL(this IServiceCollection services)
         {
-            return services.AddScoped<ITrainerService, TrainerService>();
+            return services.AddScoped<ITrainerService, TrainerService>()
+                .AddScoped<IBattleService, BattleService>();
         }
     }
 }

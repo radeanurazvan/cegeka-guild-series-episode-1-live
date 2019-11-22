@@ -13,11 +13,13 @@ namespace Cegeka.Guild.Pokeverse.BLL.Implementations
         private const int RandomAssignedPokemonsCount = 2;
         private readonly IRepository<Trainer> trainerRepository;
         private readonly IRepository<PokemonDefinition> definitionsRepository;
+        private readonly IRepository<Pokemon> pokemonRepository;
 
-        public TrainerService(IRepository<Trainer> trainerRepository, IRepository<PokemonDefinition> definitionsRepository)
+        public TrainerService(IRepository<Trainer> trainerRepository, IRepository<PokemonDefinition> definitionsRepository, IRepository<Pokemon> pokemonRepository)
         {
             this.trainerRepository = trainerRepository;
             this.definitionsRepository = definitionsRepository;
+            this.pokemonRepository = pokemonRepository;
         }
 
         public void Register(string name)
@@ -36,9 +38,10 @@ namespace Cegeka.Guild.Pokeverse.BLL.Implementations
             var trainer = new Trainer
             {
                 Name = name,
-                Pokemons = randomDefinitions.Select(d => new Pokemon(d)).ToList()
             };
+            trainer.Pokemons = randomDefinitions.Select(d => new Pokemon(d, trainer)).ToList();
             this.trainerRepository.Add(trainer);
+            trainer.Pokemons.ToList().ForEach(pokemon => pokemonRepository.Add(pokemon));
         }
 
         public IReadOnlyCollection<TrainerModel> GetAll()

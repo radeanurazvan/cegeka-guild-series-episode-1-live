@@ -2,12 +2,15 @@
 {
     public class Pokemon : Entity
     {
-        public Pokemon(PokemonDefinition definition)
+        public Pokemon(PokemonDefinition definition, Trainer trainer)
         {
             Definition = definition;
+            Trainer = trainer;
         }
 
         public PokemonDefinition Definition { get; set; }
+
+        public Trainer Trainer { get; set; }
 
         public int Health { get; set; }
 
